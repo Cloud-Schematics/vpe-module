@@ -59,7 +59,7 @@ variable "cloud_services" {
   default     = ["kms", "cloud-object-storage"]
 
   validation {
-    error_message = "Currently the only supported services are Key Protect (`kms`), Cloud Object Storage (`cloud-object-storage`), and Hyper Protect Crypto Services (`hs-crypto`)."
+    error_message = "Currently the only supported services are Key Protect (`kms`), Cloud Object Storage (`cloud-object-storage`), Container Registry (`container-registry`), and Hyper Protect Crypto Services (`hs-crypto`). Any other VPE services must be added using `cloud_service_by_crn`."
     condition = length(var.cloud_services) == 0 ? true : length([
       for service in var.cloud_services :
       service if !contains([
@@ -70,6 +70,17 @@ variable "cloud_services" {
       ], service)
     ]) == 0
   }
+}
+
+variable "cloud_service_by_crn" {
+  description = "List of cloud service CRNs. Each CRN will have a unique endpoint gateways created. For a list of supported services, see the docs [here](https://cloud.ibm.com/docs/vpc?topic=vpc-vpe-supported-services)."
+  type = list(
+    object({
+      name = string # service name
+      crn  = string # service crn
+    })
+  )
+  default = []
 }
 
 variable "service_endpoints" {

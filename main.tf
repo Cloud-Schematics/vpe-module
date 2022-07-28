@@ -4,14 +4,24 @@
 
 locals {
   # List of Gateways to create
-  gateway_list = [
+  gateway_list = concat([
     # Create object for each service
     for service in var.cloud_services :
     {
       name    = "${var.vpc_name}-${service}"
       service = service
+      crn     = null
     }
-  ]
+    ],
+    [
+      for service in var.cloud_service_by_crn :
+      {
+        name    = "${var.vpc_name}-${service.name}"
+        service = null
+        crn     = service.crn
+      }
+    ]
+  )
 
   # List of IPs to create
   endpoint_ip_list = flatten([
@@ -69,7 +79,7 @@ resource "ibm_is_virtual_endpoint_gateway" "vpe" {
   resource_group  = var.resource_group_id
   security_groups = var.security_group_ids
   target {
-    crn           = local.service_to_endpoint_map[each.value.service]
+    crn           = each.value.service == null ? each.value.crn : local.service_to_endpoint_map[each.value.service]
     resource_type = "provider_cloud_service"
   }
 }
