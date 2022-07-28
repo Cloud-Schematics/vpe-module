@@ -12,6 +12,7 @@ To read more about using Virtual Private Endpoint Gateways refer to the document
 - Cloud Object Storage (`cloud-object-storage`)
 - HyperProtect Crypto Services (`hs-crypto`)
 - Key Protect (`kms`)
+- IBM Container Registry (`container-registry`)
 
 ---
 
