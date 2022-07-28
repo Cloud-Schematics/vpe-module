@@ -65,7 +65,8 @@ variable "cloud_services" {
       service if !contains([
         "kms",
         "hs-crypto",
-        "cloud-object-storage"
+        "cloud-object-storage",
+        "container-registry"
       ], service)
     ]) == 0
   }
